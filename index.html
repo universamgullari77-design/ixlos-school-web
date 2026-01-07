@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ixlos School – Premium Ta'lim Maskani</title>
+
+<style>
+:root{
+  --main:#0f9d58;
+  --accent:#16a34a;
+  --bg:#ffffff;
+  --card:#f1f5f9;
+  --text:#1e293b;
+}
+body.dark{
+  --bg:#020617;
+  --card:#0f172a;
+  --text:#e5e7eb;
+}
+body{
+  margin:0;
+  font-family:'Segoe UI',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  transition:.3s;
+}
+header{
+  position:sticky;top:0;
+  background:linear-gradient(90deg,var(--main),var(--accent));
+  color:white;
+  padding:15px 30px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+nav a{color:white;margin:0 12px;text-decoration:none;font-weight:600;}
+.controls button{margin-left:8px;padding:6px 10px;border:none;border-radius:8px;cursor:pointer;}
+.hero{
+  min-height:80vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  background:linear-gradient(rgba(0,0,0,.55),rgba(0,0,0,.55)),
+  url('https://images.unsplash.com/photo-1503676260728-1c00da094a0b');
+  background-size:cover;color:white;
+}
+.hero h1{font-size:3rem;margin-bottom:10px;}
+section{padding:70px 20px;max-width:1200px;margin:auto;}
+.cards{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+  gap:25px;
+}
+.card{
+  background:var(--card);
+  padding:25px;
+  border-radius:20px;
+  box-shadow:0 10px 25px rgba(0,0,0,.1);
+  transition:.4s;
+}
+.card:hover{transform:translateY(-10px) scale(1.02);}
+.card img{width:100%;border-radius:15px;margin-bottom:10px;}
+.gallery{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px;}
+.gallery img{width:100%;border-radius:18px;}
+footer{background:#020617;color:white;text-align:center;padding:25px;}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h2>Ixlos School</h2>
+  <nav>
+    <a href="#about" data-uz="Biz haqimizda" data-ru="О школе"></a>
+    <a href="#courses" data-uz="Kurslar" data-ru="Курсы"></a>
+    <a href="#gallery" data-uz="Galereya" data-ru="Галерея"></a>
+    <a href="#news" data-uz="Yangiliklar" data-ru="Новости"></a>
+  </nav>
+  <div class="controls">
+    <button onclick="toggleDark()">🌙</button>
+    <button onclick="setLang('uz')">UZ</button>
+    <button onclick="setLang('ru')">RU</button>
+  </div>
+</header>
+
+<div class="hero">
+  <div>
+    <h1 data-uz="Kelajak bilim bilan boshlanadi" data-ru="Будущее начинается со знаний"></h1>
+    <p data-uz="Ixlos School — premium ta'lim markazi" data-ru="Ixlos School — премиальный учебный центр"></p>
+  </div>
+</div>
+
+<section id="about">
+  <h2 data-uz="Biz haqimizda" data-ru="О школе"></h2>
+  <p data-uz="Ixlos School zamonaviy metodlar asosida sifatli ta'lim beradi."
+     data-ru="Ixlos School предоставляет качественное образование по современным методикам."></p>
+</section>
+
+<section id="courses">
+  <h2 data-uz="Kurslar" data-ru="Курсы"></h2>
+  <div class="cards">
+    <div class="card">📘 Matematika</div>
+    <div class="card">💻 IT & Dasturlash</div>
+    <div class="card">📖 Ingliz tili</div>
+    <div class="card">🧪 Kimyo</div>
+  </div>
+</section>
+
+<section id="gallery">
+  <h2 data-uz="Galereya" data-ru="Галерея"></h2>
+  <div class="gallery">
+    <img src="https://optim.tildacdn.one/tild3437-3637-4937-b539-663539326266/-/resize/600x/-/format/webp/bola-2.png.webp" />
+    <img src="https://optim.tildacdn.one/tild3137-3161-4732-a136-643538326336/-/resize/692x/-/format/webp/devushka-2.png.webp" />
+    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSaWuvIjGZsHaYVYjgENGBO0K22qT7jWoBYUA&s" />
+  </div>
+</section>
+
+<section id="news">
+  <h2 data-uz="Yangiliklar" data-ru="Новости"></h2>
+  <div class="cards" id="newsList"></div>
+</section>
+
+<footer>
+  <p>© 2026 Ixlos School</p>
+</footer>
+
+<script>
+function toggleDark(){document.body.classList.toggle('dark');}
+function setLang(l){
+ document.querySelectorAll('[data-uz]').forEach(el=>{
+  el.textContent = l==='uz'?el.dataset.uz:el.dataset.ru;
+ });
+}
+setLang('uz');
+
+// Yangiliklar
+let news = JSON.parse(localStorage.getItem("news")) || [];
+function render(){
+ newsList.innerHTML="";
+ news.forEach(n=>{
+  newsList.innerHTML+=`
+   <div class="card">
+    ${n.img?`<img src="${n.img}">`:""}
+    <h3>${n.t}</h3>
+    <p>${n.c}</p>
+   </div>`;
+ });
+ localStorage.setItem("news",JSON.stringify(news));
+}
+render();
+</script>
+
+</body>
+</html>
