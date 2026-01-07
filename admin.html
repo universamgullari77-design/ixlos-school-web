@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Panel – Ixlos School</title>
+<style>
+body{margin:0;font-family:Segoe UI,sans-serif;background:#020617;color:#fff}
+.container{max-width:500px;margin:80px auto;background:#0f172a;padding:30px;border-radius:25px}
+input,textarea,button{width:100%;padding:12px;margin:8px 0;border:none;border-radius:12px}
+button{background:#16a34a;color:#fff;font-size:1rem;cursor:pointer}
+.card{background:#020617;padding:15px;border-radius:15px;margin-top:10px}
+.card img{width:100%;border-radius:12px;margin-bottom:8px}
+</style>
+</head>
+
+<body>
+<div class="container">
+
+<h2>🔐 Admin Login</h2>
+<div id="loginBox">
+ <input id="login" placeholder="Login">
+ <input id="pass" type="password" placeholder="Parol">
+ <button onclick="loginAdmin()">Kirish</button>
+</div>
+
+<div id="panel" style="display:none">
+ <h3>📰 Yangilik qo‘shish</h3>
+ <input id="title" placeholder="Sarlavha">
+ <textarea id="text" placeholder="Matn"></textarea>
+ <input type="file" id="img" accept="image/*">
+ <button onclick="addNews()">Qo‘shish</button>
+
+ <h3>Mavjud yangiliklar</h3>
+ <div id="list"></div>
+</div>
+
+</div>
+
+<script>
+// 🔑 Parol hash
+const ADMIN_LOGIN="admin";
+const ADMIN_HASH="03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4"; // 1234
+
+async function sha256(t){
+ const b=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(t));
+ return [...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,"0")).join("");
+}
+
+async function loginAdmin(){
+ if(login.value===ADMIN_LOGIN && await sha256(pass.value)===ADMIN_HASH){
+  loginBox.style.display="none";
+  panel.style.display="block";
+  render();
+ } else alert("Xato login yoki parol");
+}
+
+// Yangiliklar
+let news = JSON.parse(localStorage.getItem("news")) || [];
+
+function render(){
+ list.innerHTML="";
+ news.forEach((n,i)=>{
+  list.innerHTML+=`
+   <div class="card">
+    ${n.img?`<img src="${n.img}">`:""}
+    <b>${n.t}</b>
+    <p>${n.c}</p>
+    <button onclick="del(${i})">🗑 O‘chirish</button>
+   </div>`;
+ });
+ localStorage.setItem("news",JSON.stringify(news));
+}
+
+function addNews(){
+ if(!title.value||!text.value) return alert("To‘ldiring");
+ const f=img.files[0];
+ if(f){
+  const r=new FileReader();
+  r.onload=()=>{
+   news.unshift({t:title.value,c:text.value,img:r.result});
+   title.value=text.value=img.value="";
+   render();
+  };
+  r.readAsDataURL(f);
+ } else {
+  news.unshift({t:title.value,c:text.value});
+  title.value=text.value="";
+  render();
+ }
+}
+
+function del(i){news.splice(i,1);render();}
+</script>
+
+</body>
+</html>
